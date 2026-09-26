@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      PLATFORMIO_CORE_DIR: ${{ runner.temp }}/platformio
+      PLATFORMIO_CORE_DIR: /tmp/thinkpad-button-platformio
       PLATFORMIO_SETTING_ENABLE_TELEMETRY: 'no'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
