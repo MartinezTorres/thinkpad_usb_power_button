@@ -19,8 +19,25 @@ sequence has also booted it. Cold-attach timing has been sensitive during
 development; I have not established reliability across other boards,
 firmware versions or repeated cold power cycles.
 
-[Hardware](#hardware) · [Build](#build) · [Backup](#back-up-the-factory-firmware) ·
+[Download](#download) · [Hardware](#hardware) · [Build](#build) · [Backup](#back-up-the-factory-firmware) ·
 [Flash](#flash-the-accessory) · [Protocol notes](docs/protocol.md)
+
+## Download
+
+The [releases page](https://github.com/MartinezTorres/thinkpad_usb_power_button/releases)
+has firmware bundles and SHA-256 checksums. Each bundle includes the ELF
+and binary, programmer configuration, matching project and libopencm3
+sources, and license notices. These are "it works for me" snapshots.
+
+Download the named `thinkpad-usb-power-button-<version>.tar.gz` asset for
+prebuilt firmware; GitHub's automatic "Source code" archives contain the
+project source only. Back up your accessory before flashing. From inside
+an extracted firmware bundle, use:
+
+```sh
+sha256sum -c FIRMWARE-SHA256SUMS
+openocd -f openocd-picoprobe.cfg -c "program firmware.elf verify reset exit"
+```
 
 ## What it does
 
@@ -108,7 +125,8 @@ package 4.40801.0. The
 describes other environments.
 
 The outputs are `.pio/build/zy12pdn/firmware.elf` and
-`.pio/build/zy12pdn/firmware.bin`. There is no prebuilt `release/` directory.
+`.pio/build/zy12pdn/firmware.bin`. Prebuilt files are attached to GitHub
+releases rather than committed to the repository.
 The reference build uses 4,096 bytes of flash and 24 bytes of static RAM;
 stack use is additional. Building requires no connected programmer or
 target and does not flash anything.

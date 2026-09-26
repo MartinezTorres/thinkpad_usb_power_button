@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PLATFORMIO_CORE_DIR: ${{ runner.temp }}/platformio
+      PLATFORMIO_SETTING_ENABLE_TELEMETRY: 'no'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Build firmware
+        run: |
+          python -m pip install platformio==6.1.19
+          pio run
+      - name: Package firmware and corresponding sources
+        shell: bash
+        run: |
+          bundle="thinkpad-usb-power-button-${GITHUB_REF_NAME}"
+          destination="release/$bundle"
+          mkdir -p "$destination/source/vendor" "$destination/licenses"
+          git archive HEAD | tar -x -C "$destination/source"
+          cp .pio/build/zy12pdn/firmware.elf "$destination/"
+          cp .pio/build/zy12pdn/firmware.bin "$destination/"
+          cp openocd-picoprobe.cfg LICENSE NOTICE "$destination/"
+          cp docs/release-bundle.md "$destination/README.md"
+          cp -a "$PLATFORMIO_CORE_DIR/packages/framework-libopencm3" \
+            "$destination/source/vendor/"
+          cp "$PLATFORMIO_CORE_DIR/packages/framework-libopencm3/COPYING.GPL3" \
+            "$PLATFORMIO_CORE_DIR/packages/framework-libopencm3/COPYING.LGPL3" \
+            "$destination/licenses/"
+          cp "$PLATFORMIO_CORE_DIR/packages/toolchain-gccarmnoneeabi/share/doc/gcc-arm-none-eabi/license.txt" \
+            "$destination/licenses/GCC-ARM-NOTICES.txt"
+          {
+            printf 'Tag: %s\nCommit: %s\n' "$GITHUB_REF_NAME" "$GITHUB_SHA"
+            pio --version
+            "$PLATFORMIO_CORE_DIR/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc" --version
+            sha256sum src/main.cpp platformio.ini
+          } > "$destination/build-info.txt"
+          (cd "$destination" && sha256sum firmware.elf firmware.bin > FIRMWARE-SHA256SUMS)
+          tar -czf "release/$bundle.tar.gz" -C release "$bundle"
+          (cd release && sha256sum "$bundle.tar.gz" > SHA256SUMS)
+      - name: Publish works-for-me prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" release/*.tar.gz release/SHA256SUMS \
+            --verify-tag --prerelease \
+            --title "$GITHUB_REF_NAME — It works for me" \
+            --notes-file docs/release-notes.md

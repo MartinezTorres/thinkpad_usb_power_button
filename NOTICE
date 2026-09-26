@@ -12,7 +12,9 @@ The upstream MIT notice is preserved in LICENSE.
 The build downloads libopencm3 separately. Its runtime library is licensed
 under LGPL-3.0-or-later; individual dependency files retain their own notices.
 https://github.com/libopencm3/libopencm3
-No third-party library sources or compiled firmware are distributed here.
+The Git repository contains the application and build configuration.
+Release bundles also include compiled firmware, its corresponding
+application and libopencm3 sources, and dependency license notices.
 
 This is an independent experimental project, not a Lenovo product.
 Lenovo identifiers in the protocol are used for interoperability; this
