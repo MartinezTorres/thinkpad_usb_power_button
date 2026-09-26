@@ -1,0 +1,29 @@
+# Local build tools and generated firmware
+.pio/
+.venv/
+.build-venv/
+build/
+release/
+*.bin
+*.elf
+*.hex
+*.uf2
+*.o
+*.a
+*.map
+*.log
+
+# Device backups and local analysis do not belong in this repository
+backup/
+backups/
+factory-*
+*.rom
+*.dump
+*.fd
+*.cap
+
+# Editor and host files
+.vscode/
+.idea/
+__pycache__/
+.DS_Store

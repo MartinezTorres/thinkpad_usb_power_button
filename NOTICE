@@ -1,0 +1,19 @@
+ThinkPad USB-C power button
+
+Start with docs/getting-started.md for hardware, backup, build and flashing.
+See docs/protocol.md for the Lenovo button exchange and acknowledgements.
+
+The application is MIT-licensed; see LICENSE and src/main.cpp.
+Its I2C wiring and bit-banging derive from Manuel Bleichenbacher's
+zy12pdn-oss project, copyright 2020:
+https://github.com/manuelbl/zy12pdn-oss
+The upstream MIT notice is preserved in LICENSE.
+
+The build downloads libopencm3 separately. Its runtime library is licensed
+under LGPL-3.0-or-later; individual dependency files retain their own notices.
+https://github.com/libopencm3/libopencm3
+No third-party library sources or compiled firmware are distributed here.
+
+This is an independent experimental project, not a Lenovo product.
+Lenovo identifiers in the protocol are used for interoperability; this
+project has no assigned USB product identity or USB certification.
