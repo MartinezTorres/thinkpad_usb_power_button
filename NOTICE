@@ -1,6 +1,6 @@
 ThinkPad USB-C power button
 
-Start with docs/getting-started.md for hardware, backup, build and flashing.
+Start with README.md for hardware, backup, build and flashing.
 See docs/protocol.md for the Lenovo button exchange and acknowledgements.
 
 The application is MIT-licensed; see LICENSE and src/main.cpp.
